@@ -65,6 +65,8 @@ Example output record:
 ```
 
 
-## Scripts
+## Analysis
 
-Useful analysis scripts exist in the `scripts` folder.
+Useful analysis scripts exist in the `scripts` folder. 
+
+The `parse` command pairs well with [`jq`](https://stedolan.github.io/jq/).
