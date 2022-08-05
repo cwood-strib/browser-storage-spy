@@ -6,7 +6,7 @@ const { visitUrls } = require("./commands/visit");
 
 async function cli() {
   if (process.argv.length < 3) {
-    console.error(`Must specificy a command. Choose ${Commands.Read} or ${Commands.Visit}`);
+    console.error(`Must specify a command. Choose ${Commands.Read} or ${Commands.Visit}`);
   }
 
   let command = process.argv[2];
