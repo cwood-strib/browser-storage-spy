@@ -6,18 +6,20 @@ Currently, it supports cookies.
 
 ## Install
 
+Be sure to run: 
+
 ```
-// in project root
 npm install
 ```
 
 ### Usage
 
-`urls.txt`
+Create a text file that has a list of URLs with newlines separating them: 
 
 ```
 https://m.startribune.com/
 https://m.startribune.com/overnight-storms-leave-thousands-without-power-in-twin-cities/600195294/
+```
 
 ```sh
 node src/index.js visit --json < urls.txt > page_view_data.json
