@@ -32,7 +32,7 @@ This command will start a new browser session with a version of headless Chrome 
 
 ### Visit
 
-Visit a series of urls and capture data.
+Visit a series of urls and outputs raw data. This command can be slow.
 
 ```
 node src/index.js visit --json < urls.txt > page_view_data.json
