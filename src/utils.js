@@ -42,7 +42,7 @@ function doOutput(fmt, events) {
   }
 }
 
-function getChangedCookieValues(pageViews) {
+function parseEvents(pageViews) {
   let events = [];
 
   for (let i = 0; i < pageViews.length; i++) {
@@ -54,16 +54,18 @@ function getChangedCookieValues(pageViews) {
 
     let aUrl = pageViews[i].url;
     let bUrl = pageViews[next].url;
-    let aCookies = pageViews[i].items;
-    let bCookies = pageViews[next].items;
+    let aItems = pageViews[i].items;
+    let bItems = pageViews[next].items;
 
-    for (let cookie of bCookies) {
-      let { name, value, domain, type } = cookie;
-      let aVersion = aCookies.find(c => c.name === name);
+    for (let item of bItems) {
+      let { name, value, domain, type } = item;
+      let aVersion = aItems.find(c => c.name === name && c.type === type);
+
       if (aVersion) {
+        // Changed case
         if (aVersion.value !== value) {
           events.push({
-            type: Changes.Changed,
+            event: Changes.Changed,
             storage: type,
             domain: domain,
             name: name,
@@ -77,6 +79,22 @@ function getChangedCookieValues(pageViews) {
             }
           });
         }
+      } else {
+        // Added case
+        events.push({
+          event: Changes.Added,
+          storage: type,
+          domain: domain,
+          name: name,
+          urls: {
+            before: aUrl,
+            after: bUrl
+          },
+          values: {
+            before: undefined, 
+            after: value
+          }
+        });
       }
     }
   }
@@ -114,7 +132,7 @@ function makeStorageItem(type, data, domain = "") {
 }
 
 module.exports = {
-  getChangedCookieValues,
+  parseEvents,
   makeView,
   makeStorageItem,
   getInput,

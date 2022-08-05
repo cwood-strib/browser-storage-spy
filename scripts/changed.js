@@ -11,10 +11,10 @@ if (!dataPath) {
     process.exit(1);
 }
 
-let pageViews = JSON.parse(readFileSync(dataPath));
+let records = JSON.parse(readFileSync(dataPath));
 
-// All cookies that changed
-let changedCookies = pageViews.filter(res => res.storage === StorageTypes.Cookie && res.type === Changes.Changed)
+// All records that changed
+let changes = records.filter(res => res.type === Changes.Changed)
 
-console.log(changedCookies);
+console.log(changes);
     

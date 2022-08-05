@@ -1,10 +1,10 @@
 const { readFileSync } = require("fs");
-const { getChangedCookieValues } = require("../utils");
+const { parseEvents } = require("../utils");
 
 function readFromFile(path) {
   // TODO: Error handling
   let pageViews = JSON.parse(readFileSync(path));
-  return getChangedCookieValues(pageViews);
+  return parseEvents(pageViews);
 }
 
 module.exports = {
