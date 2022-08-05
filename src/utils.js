@@ -1,7 +1,6 @@
 const { listeners } = require("process");
-const { Changes, StorageTypes } = require("./types");
+const { Changes, StorageTypes, Output } = require("./types");
 const readline = require('readline');
-const { resolve } = require("path");
 
 function getInput() {
   let lines = [];
@@ -22,6 +21,27 @@ function getInput() {
   })
 }
 
+function getOutput() {
+  for (let part of process.argv) {
+    if (part === "--json") {
+      return Output.Json;
+    }
+  }
+
+  return Output.Stdio;
+}
+
+function doOutput(fmt, events) {
+  switch (fmt) {
+    case Output.Json: 
+      console.log(JSON.stringify(events));
+      break;
+    case Output.Stdio:
+      console.log(events)
+      break;
+  }
+}
+
 function getChangedCookieValues(pageViews) {
   let events = [];
 
@@ -34,18 +54,18 @@ function getChangedCookieValues(pageViews) {
 
     let aUrl = pageViews[i].url;
     let bUrl = pageViews[next].url;
-    let aCookies = pageViews[i].cookies;
-    let bCookies = pageViews[next].cookies;
+    let aCookies = pageViews[i].items;
+    let bCookies = pageViews[next].items;
 
     for (let cookie of bCookies) {
-      let { name, value } = cookie;
+      let { name, value, domain, type } = cookie;
       let aVersion = aCookies.find(c => c.name === name);
       if (aVersion) {
         if (aVersion.value !== value) {
           events.push({
             type: Changes.Changed,
-            storage: StorageTypes.Cookie,
-            domain: cookie.domain,
+            storage: type,
+            domain: domain,
             name: name,
             urls: {
               before: aUrl,
@@ -64,15 +84,40 @@ function getChangedCookieValues(pageViews) {
   return events;
 }
 
-function makeView(url, cookies) {
+function makeView(url, items) {
   return {
     url,
-    cookies
+    items
   }
+}
+
+function makeStorageItem(type, data, domain = "") {
+  switch (type) {
+    case StorageTypes.Cookie:
+      return {
+        type: StorageTypes.Cookie,
+        name: data.name,
+        value: data.value,
+        domain: data.domain
+      };
+    case StorageTypes.LocalStorage:
+      return {
+        type: StorageTypes.LocalStorage,
+        name: data[0],
+        value: data[1],
+        domain: domain
+      }
+    default:
+      throw new Error(`Unsupported storage type ${type}`);
+  }
+
 }
 
 module.exports = {
   getChangedCookieValues,
   makeView,
-  getInput
+  makeStorageItem,
+  getInput,
+  getOutput,
+  doOutput
 }

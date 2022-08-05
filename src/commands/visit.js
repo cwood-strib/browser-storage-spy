@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
-const { makeView } = require("../utils");
+const { StorageTypes } = require("../types");
+const { makeView, makeStorageItem } = require("../utils");
 
 async function visitUrls(urls) {
   const pageViews = [];
@@ -13,10 +14,22 @@ async function visitUrls(urls) {
       timeout: 0
     });
 
-    const client = await page.target().createCDPSession();
-    const cookies = (await client.send('Network.getAllCookies')).cookies;
+    const cdp = await page.target().createCDPSession();
+    const cookies = (await cdp.send('Network.getAllCookies')).cookies;
 
-    pageViews.push(makeView(url, cookies))
+    const localStorageItems = await cdp.send('DOMStorage.getDOMStorageItems', {
+      storageId: {
+        securityOrigin: await page.evaluate(() => window.origin),
+        isLocalStorage: true,
+      },
+    });
+
+    let localItems = Array.isArray(localStorageItems.entries) ? localStorageItems.entries.map(l => makeStorageItem(StorageTypes.LocalStorage, l, url)) : [];
+    let cookieItems = Array.isArray(cookies) ? cookies.map(c => makeStorageItem(StorageTypes.Cookie, c))  : [];
+
+    let items = [ ...cookieItems, ...localItems ];
+
+    pageViews.push(makeView(url, items))
   }
 
   await browser.close();

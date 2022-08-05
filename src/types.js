@@ -15,9 +15,14 @@ const Commands = {
   Help: "help"
 }
 
+const Output = {
+  Json: "json",
+  Stdio: "std"
+}
 
 module.exports = {
   Changes,
   Commands,
-  StorageTypes
+  StorageTypes,
+  Output
 }
