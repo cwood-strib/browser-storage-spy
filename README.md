@@ -51,15 +51,15 @@ Example output record:
 [
   // ...
   {
-    type: changed,
-    storage: localstorage,
-    domain: https://m.startribune.com/,
-    name: visitLog,
+    type: 'changed',
+    storage: 'localstorage',
+    domain: 'https://m.startribune.com/',
+    name: 'myStorageKey',
     urls: {
       before: https://m.startribune.com/,
       after: https://m.startribune.com/overnight-storms-leave-thousands-without-power-in-twin-cities/600195294/
     },
-    values: { before: {2022-08-04:1}, after: {2022-08-04:2} }
+    values: { before: 'first value', after: 'second-value' }
   },
 ]
 ```
