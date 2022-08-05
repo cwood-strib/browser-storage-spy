@@ -10,7 +10,7 @@ const StorageTypes = {
 }
 
 const Commands = {
-  Read: "read",
+  Parse: "parse",
   Visit: "visit",
   Help: "help"
 }

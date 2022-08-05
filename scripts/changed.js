@@ -1,5 +1,5 @@
 /**
- * Filters a given event data file down to only events were a cookie changed value
+ * Filters a given event data file down to only events where a record changed value
  */
 const { readFileSync } = require("fs");
 const { StorageTypes, Changes } = require("../src/types");

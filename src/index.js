@@ -1,7 +1,7 @@
 // const puppeteer = require('puppeteer');
-const { StorageTypes, Commands, Changes } = require('./types');
+const { Commands } = require('./types');
 const { getInput, getOutput, doOutput } = require("./utils");
-const { readFromFile } = require("./commands/read");
+const { parseFromFile } = require("./commands/parse");
 const { visitUrls } = require("./commands/visit");
 
 async function cli() {
@@ -13,9 +13,9 @@ async function cli() {
   let outFmt = getOutput();
 
   switch (command) {
-    case Commands.Read:
+    case Commands.Parse:
       let file = process.argv[3];
-      let events = readFromFile(file);
+      let events = parseFromFile(file);
       doOutput(outFmt, events);
       break;
     case Commands.Visit:
@@ -31,4 +31,6 @@ async function cli() {
 
 cli().then(_ => {
   // Done
+}).catch(e => {
+  process.exit(1);
 });
